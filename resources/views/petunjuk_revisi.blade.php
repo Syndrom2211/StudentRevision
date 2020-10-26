@@ -32,7 +32,7 @@
                         @endforeach
                       </tbody>
                     </table>
-                    <a href="/proposalku/{{ Auth::user()->id }}"><button class="btn btn-primary">Kembali</button></a>
+                    <a href="/proposalku/komentar/{{ Auth::user()->id }}"><button class="btn btn-primary">Kembali</button></a>
                 </div>
             </div>
         </div>

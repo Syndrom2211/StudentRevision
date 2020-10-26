@@ -21,39 +21,40 @@
                         @endforeach
                     </div>
                     @endif
-
-                    <form action="/upload_proposal_proses" method="POST" enctype="multipart/form-data">
-                        {{ csrf_field() }}                  
-                                              
-                        <div class="form-group">
-                            <b>File</b><br/>
-                            <input type="file" name="file">
-                        </div>
-                        
-                        @if (Auth::user()->level == 'mahasiswa')
-                            <input type="hidden" value="{{ Auth::user()->id }}" name="id_mahasiswa" />
+                    
+                    @foreach($hasil as $li)
+                        @if(Auth::user()->id != $li->id)                            
+                            Maaf, fitur upload proposal tidak bisa dilakukan sebelum pembimbing mengizinkan akun anda untuk upload. Terima kasih
                         @else
-                        <div class="form-group">
-                            <b>Mahasiswa</b><br/>
-                            <select class="form-control" name="id_mahasiswa">
-                                <option value="">aaa</option>
-                            </select>
-                        </div>
-                        @endif
-                        
-                        <div class="form-group">
-                            <b>Keterangan</b>
-                            <textarea class="form-control" name="keterangan"></textarea>
-                        </div>
+                            <form action="/upload_proposal_proses" method="POST" enctype="multipart/form-data">
+                                {{ csrf_field() }}                  
+                                <div class="form-group">
+                                    <b>ID Proposal</b><br/>
+                                    <input class="form-control" type="text" value="{{ rand(10,10000) }}" name="id_proposal" readonly />
+                                </div>
 
-                        <input type="submit" value="Upload" class="btn btn-primary">
-                    </form>
-                    <br/>
-                    @if (Auth::user()->level == 'mahasiswa')
-                        <a href="/proposalku/{{ Auth::user()->id }}"><button class="btn btn-primary">Kembali</button></a>
-                    @else
-                        <a href="/"><button class="btn btn-primary">Kembali</button></a>
-                    @endif
+                                <input type="hidden" name="id_mahasiswa" value="{{ Auth::user()->id }}" />
+                                
+                                <div class="form-group">
+                                    <b>File</b><br/>
+                                    <input type="file" name="file">
+                                </div>
+
+                                <div class="form-group">
+                                    <b>Keterangan</b>
+                                    <textarea class="form-control" name="keterangan"></textarea>
+                                </div>
+
+                                <input type="submit" value="Upload" class="btn btn-primary">
+                            </form>
+                            <br/>
+                            @if (Auth::user()->level == 'mahasiswa')
+                                <a href="/proposalku/{{ Auth::user()->id }}"><button class="btn btn-primary">Kembali</button></a>
+                            @else
+                                <a href="/"><button class="btn btn-primary">Kembali</button></a>
+                            @endif
+                        @endif     
+                    @endforeach
                 </div>
             </div>
         </div>

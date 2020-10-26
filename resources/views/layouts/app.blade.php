@@ -7,8 +7,9 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Sistem Cerdas') }}</title>
+    
+    <title>Intelligent Student Revision</title>
+    <!--<title>{{ config('app.name', 'Intelligent Student Revision') }}</title>-->
       
     <!-- <link href="{{ asset('assets/vendors/iconfonts/simple-line-icon/css/simple-line-icons.css') }}" rel="stylesheet"> -->
     
@@ -25,7 +26,7 @@
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   
   <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
+  <link rel="shortcut icon" href="{{ url('/icon.png') }}" />
     
 </head>
 <body>
@@ -43,8 +44,13 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <!--<a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name', 'Sistem Cerdas') }}
+                    </a>-->
+                    
+                    
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        <img src="{{ url('/icon.png') }}" style="float:left;" width="25"/> Intelligent Student Revision
                     </a>
                 </div>
 
@@ -61,66 +67,68 @@
                             <!--<li><a href="{{ route('login') }}">Login</a></li>
                             route('register') }}">Register</a></li>-->
                         @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+                                    <!--<li>
+                                        <a href="#">
+                                            <b>{{ Auth::user()->name }}</b>
+                                        </a>
+                                    </li> -->
 
-                                <ul class="dropdown-menu" role="menu">
                                     @if (Auth::user()->level == 'mahasiswa')
                                     <li>
                                         <a href="/">
                                             Lihat Notifikasi Revisi Proposal
                                         </a>
-                                        
+                                    </li>
+                                    <li>
                                         <a href="/pengaturan_mhs/{{ Auth::user()->id }}">
                                             Lihat Data Akun
                                         </a>
-                                        
+                                    </li> 
+                                    <li>
                                         <a href="/proposalku/{{ Auth::user()->id }}"
                                             onclick="">
                                             Lihat Proposal
                                         </a>
-                                        
+                        </li>
+                        <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
-
+                        </li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
-                                    </li>
                                     @else
                                     <li>   
                                         <a href="/pengaturan_mhs/{{ Auth::user()->id }}">
                                             Lihat Data Akun
                                         </a>
-                                        
+                                    </li>
+                                    <li>
                                         <a href="/data_mhs_bimbingan"
                                             onclick="">
                                             Lihat Data Mahasiswa Bimbingan
                                         </a>
-                                        
-                                        <a href="/upload_proposal"
+                        </li>
+                        <li>
+                                        <a href="/upload_proposal_revisi/{{ Auth::user()->id }}"
                                             onclick="">
                                             Unggah Proposal Revisi
                                         </a>
-                                        
+                        </li>
+                        <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
-
+                        </li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
-                                    </li>
                                     @endif
-                                </ul>
-                            </li>
                         @endif
                     </ul>
                 </div>

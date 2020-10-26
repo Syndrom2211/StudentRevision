@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\Crypt;
 //dari model
 use App\User;
 use App\Proposalku;
+use App\Proposalku_revisi;
 use App\Komentar;
 use App\DataMahasiswa;
 use DB;
-    
+
 class HomeController extends Controller
 {
     /**
@@ -49,11 +50,44 @@ class HomeController extends Controller
         $hasil = User::where('id', '=', $id)->take(1)->get();
         return view('pengaturan_mhs_ubah', ['liat'=>$hasil]);
     }
+
+    public function pengaturan_mhs_ubah_proses(Request $request){
+        $edit = new user;
+        $edit->id               = $request->id_user;
+        $edit->name             = $request->nama;
+        $edit->email            = $request->email;
+        $edit->password         = $request->password;
+        
+        // update data proposal
+        DB::table('users')->where('id',$request->id_user)->update([
+            'id' => $edit->id,
+            'name' => $edit->name,
+            'email' => $edit->email,
+            'password' => bcrypt($edit->password)
+        ]);
+        
+        // alihkan halaman ke halaman proposal
+        return redirect('/pengaturan_mhs/'.$edit->id);
+    }
     
     //----Upload Proposal
     public function upload_proposal()
     {
-        return view('upload_proposal');
+        //$hasil = DataMahasiswa::all();
+        //$hasil = DB::table('mhs_bimbingan')
+        //        ->join('users', 'users.id', '=', 'mhs_bimbingan.id')
+        //        ->select('mhs_bimbingan.*', 'users.*')
+        //        ->get();
+        
+        $hasil = DataMahasiswa::all();
+        $hasil2 = DB::table('mhs_bimbingan')
+                ->join('users', 'users.id', '=', 'mhs_bimbingan.id_pembimbing')
+                ->select('mhs_bimbingan.*', 'users.*')
+                ->get();
+        
+        return view('upload_proposal', compact(['hasil','hasil2']));
+        
+        //return view('upload_proposal', ['liat'=>$hasil]);
     }
     
     public function upload_proposal_proses(Request $request)
@@ -70,10 +104,12 @@ class HomeController extends Controller
 		$tujuan_upload = 'dokumen_proposal';
 
         // upload file
-		$file->move($tujuan_upload,$file->getClientOriginalName());
+		$file->move($tujuan_upload, preg_replace("/\s+/","",$file->getClientOriginalName()));
         
         //---ke database---
         $tambah = new proposalku;
+        
+        $tambah->id_proposal    = $request->id_proposal;
         $tambah->nama_dokumen   = $file->getClientOriginalName();
         $tambah->id_mahasiswa   = $request->id_mahasiswa;
         $tambah->tipe_dokumen   = $file->getClientOriginalExtension();
@@ -81,7 +117,23 @@ class HomeController extends Controller
         $tambah->keterangan     = $request->keterangan;
         
         $tambah->save();
-        return redirect('/proposalku');
+        //$ya = preg_replace("/\s+/","",$file->getClientOriginalName());
+        
+        //$a = shell_exec("C:\Python38-32\python ". app_path() . "\http\controllers\PythonScript\get_comment.py C:\wamp64\www\sistem_cerdas\public\dokumen_proposal\\".$ya);
+        
+        /*
+        $tampung = explode("\n",$a);
+        for ($x = 0; $x <= count($tampung)-1; $x++) {
+            $tambah2 = new komentar;
+            $tambah2->id_proposal = $request->id_proposal;
+            $tambah2->id_pembimbing = $request->id_pembimbing;
+            $tambah2->teks_komentar = $tampung[$x];
+            $tambah2->kategori_komentar = "content-related";
+            $tambah2->tgl_komentar = "2020-07-29";
+            $tambah2->save();
+        }*/         
+        
+        return redirect('/proposalku/'.$request->id_mahasiswa);
     }
     //----Upload Proposal
     
@@ -133,7 +185,7 @@ class HomeController extends Controller
         ]);
         
         // alihkan halaman ke halaman proposal
-        return redirect('/proposalku');
+        return redirect('/proposalku/'.$edit->id_mahasiswa);
     }
     
     public function hapus_proposalku($id_proposal){
@@ -141,7 +193,7 @@ class HomeController extends Controller
         DB::table('dokumen_proposals')->where('id_proposal',$id_proposal)->delete();
         
         // alihkan halaman ke halaman proposalku
-        return redirect('/proposalku');
+        return redirect('/');
     }
     
     public function lihat_komentar($id_proposal)
@@ -170,13 +222,13 @@ class HomeController extends Controller
     
     public function tambah_data_mhs_bimbingan()
     {        
-        //$hasil = User::where('level', '=', 'mahasiswa')->get();
+        $hasil = User::where('level', '=', 'mahasiswa')->get();
         //$hasil = Proposalku::where('level', '=', 'mahasiswa')->get();
         
-        $hasil = DB::table('dokumen_proposals')
-                 ->join('users', 'users.id', '=', 'dokumen_proposals.id_mahasiswa')
-                 ->select('users.*', 'dokumen_proposals.*')
-                 ->get();
+        //$hasil = DB::table('dokumen_proposals')
+        //         ->join('users', 'users.id', '=', 'dokumen_proposals.id_mahasiswa')
+        //         ->select('users.*', 'dokumen_proposals.*')
+        //         ->get();
         
         return view('tambah_data_mhs_bimbingan', ['liat'=>$hasil]);
     }
@@ -241,5 +293,78 @@ class HomeController extends Controller
                 ->select('petunjuk_revisi.*', 'komentar_proposal.*')
                 ->get();
         return view('petunjuk_revisi', ['liat'=>$hasil]);
+    }
+
+    public function proposal_mhs_bimbingan()
+    {
+        //join antara tabel mhs_bimbingan dan dokumen_proposal (untuk ambil data proposalnya)
+        $hasil = DB::table('mhs_bimbingan')
+                ->join('dokumen_proposals', 'dokumen_proposals.id_mahasiswa', '=', 'mhs_bimbingan.id')
+                ->select('mhs_bimbingan.*', 'dokumen_proposals.*')
+                ->get();
+        return view('proposal_mhs_bimbingan', ['liat'=>$hasil]);
+    }
+
+    public function upload_proposal_revisi_proses(Request $request)
+    {
+        $this->validate($request, [
+			'file' => 'required|mimes:doc,docx',
+		]);
+        
+        // menyimpan data file yang diupload ke variabel $file
+		$file = $request->file('file');
+        
+      	// isi dengan nama folder tempat kemana file diupload
+		$tujuan_upload = 'dokumen_proposal';
+
+        // upload file
+		$file->move($tujuan_upload, preg_replace("/\s+/","",$file->getClientOriginalName()));
+        
+        //---ke database---
+        $tambah = new proposalku_revisi;
+        
+        $tambah->id_revisi      = $request->id_revisi;
+        $tambah->id_proposal    = $request->id_proposal;
+        $tambah->nama_dokumen   = $file->getClientOriginalName();
+        $tambah->id_mahasiswa   = $request->id_mahasiswa;
+        $tambah->tipe_dokumen   = $file->getClientOriginalExtension();
+        $tambah->link_dokumen   = $tujuan_upload."/".$file->getClientOriginalName();
+        $tambah->catatan_pembimbing     = $request->catatan_pembimbing;
+        
+        $tambah->save();
+        $ya = preg_replace("/\s+/","",$file->getClientOriginalName());
+        
+        $a = shell_exec("C:\Python-27\python ". app_path() . "\http\controllers\PythonScript\get_comment.py C:\wamp64\www\sistem_cerdas\public\dokumen_proposal\\".$ya);
+        
+        $tampung = explode("\n",$a);
+        for ($x = 0; $x <= count($tampung)-1; $x++) {
+            $tambah2 = new komentar;
+            $tambah2->id_proposal = $request->id_proposal;
+            $tambah2->id_pembimbing = $request->id_pembimbing;
+            $tambah2->teks_komentar = $tampung[$x];
+            $tambah2->kategori_komentar = "content-related";
+            $tambah2->tgl_komentar = "2020-07-29";
+            $tambah2->save();
+        }            
+        
+        return redirect('/upload_proposal_revisi/'.$request->id_pembimbing);
+    }
+
+    public function upload_proposal_revisi()
+    {        
+        //di join kan dengan tabel mahasiswa bimbingan untuk ambil id pembimbing nya
+        //where level mahasiswa and id pembimbing sama dengan yang login/berelasi
+
+        //$hasil = User::where('level', '=', 'mahasiswa')->get();
+        //return view('upload_proposal_revisi', ['liat'=>$hasil]);    
+        
+        $hasil = DB::table('users')
+                ->join('mhs_bimbingan', 'mhs_bimbingan.id', '=', 'users.id')
+                ->join('dokumen_proposals', 'dokumen_proposals.id_mahasiswa', '=', 'users.id')
+                ->select('users.*', 'mhs_bimbingan.*', 'dokumen_proposals.*')
+                ->where('users.level', '=', 'mahasiswa')
+                ->get();
+
+        return view('upload_proposal_revisi', ['liat'=>$hasil]);
     }
 }

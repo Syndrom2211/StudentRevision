@@ -19,9 +19,10 @@
                     @endif
                     
                             <!-- form validasi -->
-                            <form action="/pengaturan_mhs_ubah/{{ Auth::user()->id }}" method="post">
+                            <form action="/pengaturan_mhs_ubah_proses/{{ Auth::user()->id }}" method="post">
                                 {{ csrf_field() }}
                                 @foreach ($liat as $li)
+                                <input type="hidden" name="id_user" value="{{ Auth::user()->id }}">
                                     <div class="form-group">
                                         <label for="nama">Nama</label>
                                         <input class="form-control" type="text" name="nama" value="{{ $li->name }}">
@@ -32,7 +33,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="usia">Password</label>
-                                        <input class="form-control" type="text" name="password" placeholder="Masukan password lama kembali jika tidak diubah" value="" required>
+                                        <input class="form-control" type="password" name="password" placeholder="Konfirmasi password jika tidak mengubah password" value="" required>
                                     </div>
                                     <div class="form-group">
                                         <input class="btn btn-primary" type="submit" value="Simpan">

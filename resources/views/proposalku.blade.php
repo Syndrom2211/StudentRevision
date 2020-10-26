@@ -23,7 +23,8 @@
                           <th scope="col">Tipe</th>
                           <th scope="col">Unduh</th>
                           <th scope="col">Keterangan</th>
-                          <th scope="col">Komentar</th>
+                          <th scope="col">Tanggal Unggah</th>
+                          <th scope="col">Komentar</th> <!-- TOMBOLNYA PINDAHIN/SESUAIKAN -->
                           <th scope="col">Aksi</th>
                         </tr>
                       </thead>
@@ -33,8 +34,9 @@
                           <td>{{ $li->id_proposal }}</td>
                           <td>{{ $li->nama_dokumen }}</td>
                           <td>{{ $li->tipe_dokumen }}</td>
-                            <td><a target="_blank" href="../{{ $li->link_dokumen }}">aaa</a></td>
+                            <td><a target="_blank" href="../{{ preg_replace('/\s+/','',$li->link_dokumen) }}">aaa</a></td>
                           <td>{{ $li->keterangan }}</td>
+                          <td>{{ $li->created_at }}</td>
                           <td><a href="/proposalku/komentar/{{ $li->id_proposal }}"><button class="btn btn-primary">Lihat</button></a></td>
                           <td>
                             <a href="/proposalku/edit/{{ $li->id_proposal }}"><button class="btn btn-primary">Ubah</button></a>

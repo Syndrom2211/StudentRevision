@@ -11,6 +11,7 @@
                     <div class="panel-heading">Dashboard</div>
                 @endif
                 
+                <!--*JANGAN DISINI MASANG STATUSNYA*-->
                 <div class="panel-body">
                     @if (Auth::user()->level == 'mahasiswa')
                         <div class="alert alert-success" role="alert">                            
@@ -22,7 +23,7 @@
                                     @elseif (($lo->id_mahasiswa == Auth::user()->id) AND ($li->status_revisi == 'Sudah Revisi'))
                                         <b><font color='green'>Selamat, Proposal Anda Sudah di Revisi</font></b>
                                     @else
-                                        <b><font color='green'>Maaf, Anda belum Upload Proposal</font></b>
+                                        <b><font color='green'>Selamat, Proposal Anda Sudah di Revisi</font></b>
                                     @endif
                                 @endforeach
                             @endforeach
@@ -33,6 +34,7 @@
                         </div>
                     @endif
                 </div>
+                <!--*JANGAN DISINI MASANG STATUSNYA*-->
                 
             </div>
         </div>

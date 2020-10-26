@@ -1,0 +1,50 @@
+PERCOBAAN KE 1 (Tambah 1 mhs, Tambah 1 Pembimbing)
+kondisi	: sebelum pembimbing menambahkan akun mahasiswa bimbingan
+lokasi	: halaman mahasiswa
+status revisi proposal 	= masih ga muncul notif
+pas mau upload proposal	= masih ga muncul notif
+
+kondisi : pas pembimbing baru pertama login
+lokasi	: halaman pembimbing
+status unggah proposal revisi	= masih kosong ga muncul apapun
+
+kondisi : setelah tambah mahasiswa bimbingan
+lokasi	: halaman pembimbing
+-muncul notif " Maaf, fitur upload proposal tidak bisa dilakukan sebelum pembimbing mengizinkan akun anda untuk upload. Terima kasih "
+harusnya itu di mahasiswa sebelum ditambah
+
+kondisi	: pas di halaman lihat data mahasiswa bimbingan
+lokasi	: halaman pembimbing
+ga ada tombol hapus untuk mahasiswa bimbingan, harusnya ada (pertimbangkan)
+
+*status revisi proposal munculin statusnya pas udah upload proposal dr mahasiswa = MUNCUL (OK)
+
+kondisi	: pas di halaman lihat komentar
+lokasi	: halaman mahasiswa
+komentar belum muncul, benerin, padahal ada komentar di dokumennya
+
+kondisi	: pas di halaman komentar pembimbing
+lokasi	: halaman mahasiswa
+petunjuk revisi belum muncul, pas di klik lihat di bagian lihat komentar, ada fungsi seleksi kandidat petunjuk revisi dari database
+
+kondisi	: pas di halaman proposalku
+lokasi	: halaman mahasiswa
+data ke 1+n belum muncul, masih 1 data yang muncul
+
+kondisi	: pas di halaman porposal_mhs_bimbingan
+lokasi	: halaman pembimbing
+hilangkan tombol unduhan untuk dokumen yang lama, munculkan hanya di dokumen yang baru saja di upload mahasiswa
+
+kondisi	: pas di halaman upload proposal revisi
+lokasi	: halaman pembimbing
+munculkan hanya 1 tombol upload saja, jangan >1
+
+*tambahin fitur kirim pesan dosen ke pembimbing dan sebaliknya, untuk memberitahu bahwa revisi telah selesai, tidak ada lagi revisi
+
+kondisi	: pas di halaman depan udah login mahasiswa
+lokasi	: halaman mahasiswa
+munculkan hanya 1 pesan selamat datang saja, jangan >2
+
+kondisi	:pas di halaman lihat komentar
+lokasi	: halaman mahasiswa
+jangan tampilkan komentar yang ID nya tidak sesuai, tampilkan yang sesuai ID

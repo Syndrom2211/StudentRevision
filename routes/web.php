@@ -37,6 +37,7 @@ Auth::routes();
 Route::get('/pengaturan_mhs/{id}', 'HomeController@pengaturan_mhs')->name('pengaturan_mhs');
 
 Route::get('/pengaturan_mhs_ubah/{id}', 'HomeController@pengaturan_mhs_ubah')->name('pengaturan_mhs_ubah');
+Route::post('/pengaturan_mhs_ubah_proses/{id}', 'HomeController@pengaturan_mhs_ubah_proses')->name('pengaturan_mhs_ubah_proses');
 
 Route::get('/data_mhs_bimbingan', 'HomeController@data_mhs_bimbingan')->name('data_mhs_bimbingan');
 
@@ -50,3 +51,9 @@ Route::post('/proses_tambah_data_mhs_bimbingan', 'HomeController@proses_tambah_d
 Route::post('/proses_notifikasi_revisi', 'HomeController@proses_notifikasi_revisi');
 
 Route::get('/proposalku/komentar/petunjuk_revisi/{id_komentar}', 'HomeController@petunjuk_revisi')->name('petunjuk_revisi');
+
+Route::get('/proposal_mhs_bimbingan/{id_mhs_bimbingan}', 'HomeController@proposal_mhs_bimbingan')->name('proposal_mhs_bimbingan');
+
+Route::get('/upload_proposal_revisi/{id}', 'HomeController@upload_proposal_revisi')->name('upload_proposal_revisi');
+
+Route::post('/upload_proposal_revisi_proses/{id}', 'HomeController@upload_proposal_revisi_proses')->name('upload_proposal_revisi_proses');

@@ -51,6 +51,7 @@
                               @endif
                           <td>
                             <a href="/data_mhs_bimbingan/edit/{{ $li->id_mhs_bimbingan }}"><button class="btn btn-primary">Ubah</button></a>
+                            <a href="/proposal_mhs_bimbingan/{{ $li->id_mhs_bimbingan }}"><button class="btn btn-primary">Lihat Proposal</button></a>
                           </td>
                         </tr>
                         @endforeach
